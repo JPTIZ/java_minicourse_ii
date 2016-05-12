@@ -7,27 +7,20 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.EOFException;
-import java.io.FileNotFoundException;
-
-import java.util.ArrayList;
-
 public class WindowEditProduct extends JDialog {
     public static final long serialVersionUID = 3L;
 
-    JLabel lblName;
-    JLabel lblCost;
-    JTextField edtName;
-    JTextField edtCost;
-    JButton btnSave;
+    private JLabel lblName;
+    private JLabel lblCost;
+    private JTextField edtName;
+    private JTextField edtCost;
+    private JButton btnSave;
+    private Database database;
 
-    public WindowEditProduct(JFrame parent) {
+    public WindowEditProduct(JFrame parent, Database database) {
         super(parent);
+
+        this.database = database;
 
         setModal(true);
 
@@ -75,39 +68,7 @@ public class WindowEditProduct extends JDialog {
                                 edtName.getText(),
                                 Double.parseDouble(edtCost.getText())
                             );
-        ArrayList<Product> products = new ArrayList<>();
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        try {
-            fis = new FileInputStream("products");
-            ois = new ObjectInputStream(fis);
-            while (true) {
-                products.add((Product)ois.readObject());
-            }
-        } catch (EOFException e) {
-            try {
-                ois.close();
-                fis.close();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não existente, criando novo");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        products.add(product);
-        try {
-            FileOutputStream fos = new FileOutputStream("products");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (Product product_: products) {
-                oos.writeObject(product_);
-            }
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar produto");
-        }
+        database.saveProduct(product);
     }
 
 }

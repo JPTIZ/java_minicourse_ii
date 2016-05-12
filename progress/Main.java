@@ -1,6 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        MyWindow window = new MyWindow();
+	Database database = new Database();
+        MyWindow window = new MyWindow(database);
         window.setVisible(true);
     }
 }

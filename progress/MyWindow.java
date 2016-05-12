@@ -12,13 +12,19 @@ public class MyWindow extends JFrame {
 
     private JMenuBar menuBar;
     private JMenu menuRegister;
+    private JMenu menuList;
     private JMenuItem itemRegisterProduct;
+    private JMenuItem itemListProducts;
+    private Database database;
 
-    public MyWindow() {
+    public MyWindow(Database database) {
         super();
+
+        this.database = database;
 
         menuBar = new JMenuBar();
         menuRegister = new JMenu("Cadastrar");
+        menuList = new JMenu("Listar");
         itemRegisterProduct = new JMenuItem("Produto");
         itemRegisterProduct.addActionListener(
                     new ActionListener() {
@@ -31,7 +37,19 @@ public class MyWindow extends JFrame {
 
         menuRegister.add(itemRegisterProduct);
 
+        itemListProducts = new JMenuItem("Produtos");
+        itemListProducts.addActionListener(
+		    new ActionListener() {
+		        @Override
+                        public void actionPerformed(ActionEvent e) {
+			    onSelectListProducts();
+			}
+		    }
+		);
+        menuList.add(itemListProducts);
+
         menuBar.add(menuRegister);
+        menuBar.add(menuList);
 
         setJMenuBar(menuBar);
 
@@ -40,8 +58,12 @@ public class MyWindow extends JFrame {
     }
 
     private void onSelectRegisterProduct() {
-        WindowEditProduct editProductWindow = new WindowEditProduct(this);
+        WindowEditProduct editProductWindow = new WindowEditProduct(this, database);
         editProductWindow.setVisible(true);
     }
 
+    private void onSelectListProducts() {
+	WindowListProducts listWindow = new WindowListProducts(this, database);
+        listWindow.setVisible(true);
+    }
 }
